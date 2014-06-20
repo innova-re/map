@@ -1,20 +1,26 @@
 (function () {
 	"use strict";
+
+	var contentString = '<div id="content">'+
+		'<div id="siteNotice">'+
+		'</div>'+
+		'<h1 id="firstHeading" class="firstHeading">Universit&agrave; degli Studi di Cagliari</h1>'+
+		'<div id="bodyContent">'+
+		'<p>Facolt&agrave; di Ingegneria e Architettura, ingresso via Is Maglias.</p>'+
+		'<p><a target="_" href="http://facolta.unica.it/ingegneriarchitettura/">Facolt&agrave; di Ingegneria e Architettura </a></p>'+
+		'</div>'+
+		'</div>';
+
+	var infowindow = new google.maps.InfoWindow({
+		content: contentString
+	});
+
+	var map,
+		marker,
+		bloccoQ,
+		triangleCoords;
+
 	var initialize = function () {
-
-		var contentString = '<div id="content">'+
-			'<div id="siteNotice">'+
-			'</div>'+
-			'<h1 id="firstHeading" class="firstHeading">Universit&agrave; degli Studi di Cagliari</h1>'+
-			'<div id="bodyContent">'+
-			'<p>Facolt&agrave; di Ingegneria e Architettura, ingresso via Is Maglias.</p>'+
-			'<p><a target="_" href="http://facolta.unica.it/ingegneriarchitettura/">Facolt&agrave; di Ingegneria e Architettura </a></p>'+
-			'</div>'+
-			'</div>';
-
-		var infowindow = new google.maps.InfoWindow({
-			content: contentString
-		});
 
         var mapOptions = {
 			zoom: 19,
@@ -22,12 +28,11 @@
 			mapTypeId: google.maps.MapTypeId.SATELLITE
         }
 
-        var bloccoQ;
-
-        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
         var myLatLng = new google.maps.LatLng(39.229689, 9.107713);
-        var marker = new google.maps.Marker({
+        
+        marker = new google.maps.Marker({
             position: myLatLng,
             map: map,
             animation: google.maps.Animation.DROP,
@@ -35,7 +40,7 @@
         });
 
         // Define the LatLng coordinates for the Blocco Q.
-		var triangleCoords = [
+		triangleCoords = [
 			new google.maps.LatLng(39.230515, 9.107900),
 			new google.maps.LatLng(39.229865, 9.108101),
 			new google.maps.LatLng(39.230101, 9.107380),
@@ -60,11 +65,29 @@
 			infowindow.open(map, marker);
 		});
 
-		39.230515, 9.107900
     }
 
-    var showBloccoQ = function () {
-    	
+
+
+    var showBloccoQ = function (event) {
+
+		var contentString = '<b>Blocco Q</b><br>' +
+			'<a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Terzo piano</a>' +
+			'<br><br>';
+
+		var infoWindow = new google.maps.InfoWindow({
+			content: contentString
+		});
+
+		infoWindow.setPosition(event.latLng);
+
+		infoWindow.open(map);
+
+		$('.test-popup-link').magnificPopup({ 
+			type: 'image'
+			// other options
+		});
+
     }
 
 	google.maps.event.addDomListener(window, 'load', initialize);
