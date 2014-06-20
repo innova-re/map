@@ -14,13 +14,19 @@
 
     <div>
       <strong>Start: </strong>
-      <input type="text" value="" id="start" size="50">
+      <input type="text" value="via Ospedale, 121 Cagliari" id="start" size="50">
       </select>
       <strong>End: </strong>
       <select id="end">
-      <option value="39.229727, 9.107773">Blocco Q</option>
+      <option value="39.229689, 9.107713">Ingegneria - Blocco Q</option>
       </select>
-      <button id="search">Cerca</button>
+      <select id="mode">
+        <option>Seleziona il mezzo di trasporto</option>
+        <option value="DRIVING">Driving</option>
+        <option value="WALKING">Walking</option>
+        <option value="BICYCLING">Bicycling</option>
+        <option value="TRANSIT">Mezzi pubblici</option>
+      </select>
     </div>
 
     <div id="map-canvas">
