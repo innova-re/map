@@ -15,12 +15,17 @@
 		content: contentString
 	});
 
+	var directionsDisplay;
+	var directionsService = new google.maps.DirectionsService();
+
 	var map,
 		marker,
 		bloccoQ,
 		triangleCoords;
 
 	var initialize = function () {
+
+		directionsDisplay = new google.maps.DirectionsRenderer();
 
         var mapOptions = {
 			zoom: 19,
@@ -65,6 +70,8 @@
 			infowindow.open(map, marker);
 		});
 
+		directionsDisplay.setMap(map);
+
     }
 
 
@@ -72,8 +79,11 @@
     var showBloccoQ = function (event) {
 
 		var contentString = '<b>Blocco Q</b><br>' +
-			'<a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Terzo piano</a>' +
-			'<br><br>';
+			'<ul>' +
+			'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Primo piano</a></li>' +
+			'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Secondo piano</a></li>' +
+			'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Terzo piano</a></li>' +
+			'</ul><br>';
 
 		var infoWindow = new google.maps.InfoWindow({
 			content: contentString
@@ -85,10 +95,27 @@
 
 		$('.test-popup-link').magnificPopup({ 
 			type: 'image'
-			// other options
 		});
 
     }
+
+	var calcRoute = function() {
+		var start = document.getElementById("start").value;
+		var end = document.getElementById("end").value;
+		var request = {
+			origin:start,
+			destination:end,
+			travelMode: google.maps.TravelMode.DRIVING
+		};
+
+		directionsService.route(request, function(result, status) {
+			if (status == google.maps.DirectionsStatus.OK) {
+			directionsDisplay.setDirections(result);
+			}
+		});
+	}
+
+	$('#search').click(calcRoute);
 
 	google.maps.event.addDomListener(window, 'load', initialize);
 

@@ -8,12 +8,27 @@
       #map-canvas { height: 100% }
     </style>
     <link href="http://dimsemenov.com/plugins/magnific-popup/site-assets/all.min.css?v=0.9.9" rel="stylesheet" />
+  </head>
+  <body>
+
+
+    <div>
+      <strong>Start: </strong>
+      <input type="text" value="" id="start" size="50">
+      </select>
+      <strong>End: </strong>
+      <select id="end">
+      <option value="39.229727, 9.107773">Blocco Q</option>
+      </select>
+      <button id="search">Cerca</button>
+    </div>
+
+    <div id="map-canvas">
+    </div>
+
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
     <script src="../../bower_components/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
     <script src="../js/maps.js"></script>
-  </head>
-  <body>
-    <div id="map-canvas"/>
   </body>
 </html>
