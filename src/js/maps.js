@@ -72,6 +72,31 @@
 
 		directionsDisplay.setMap(map);
 
+		var lineSymbol = {
+			path: google.maps.SymbolPath.CIRCLE,
+			strokeOpacity: 1,
+			scale: 4
+		};
+
+		var lineCoordinates = [
+			new google.maps.LatLng(39.229689, 9.107713),
+			new google.maps.LatLng(39.22981,9.10814),
+			new google.maps.LatLng(39.230175,9.108046),
+			new google.maps.LatLng(39.230185,9.107969)
+		];
+
+		var line = new google.maps.Polyline({
+			path: lineCoordinates,
+			strokeOpacity: 0,
+			strokeColor: '#0066FF',
+			icons: [{
+				icon: lineSymbol,
+				offset: '0',
+				repeat: '20px'
+			}],
+			map: map
+		});
+
     }
 
 
