@@ -1,40 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map-canvas { height: 100% }
-    </style>
-    <link href="http://dimsemenov.com/plugins/magnific-popup/site-assets/all.min.css?v=0.9.9" rel="stylesheet" />
-  </head>
-  <body>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <style type="text/css">
+            html { height: 100% }
+            body { height: 100%; margin: 0; padding: 0 }
+            #map-canvas { height: 100% }
+        </style>
+        <link href="http://dimsemenov.com/plugins/magnific-popup/site-assets/all.min.css?v=0.9.9" rel="stylesheet" />
+        <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/main.css">
+    </head>
 
+    <body>
 
-    <div>
-      <strong>Start: </strong>
-      <input type="text" value="via Ospedale, 121 Cagliari" id="start" size="50">
-      </select>
-      <strong>End: </strong>
-      <select id="end">
-      <option value="39.229689, 9.107713">Ingegneria - Blocco Q</option>
-      </select>
-      <select id="mode">
-        <option>Seleziona il mezzo di trasporto</option>
-        <option value="DRIVING">Driving</option>
-        <option value="WALKING">Walking</option>
-        <option value="BICYCLING">Bicycling</option>
-        <option value="TRANSIT">Mezzi pubblici</option>
-      </select>
-    </div>
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <label class="control-label" for="start">Partenza</label>
+                <input type="text" class="form-control" id="start" value="via Ospedale, 121 Cagliari" size="50">
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="end">Arrivo</label>
+                <select id="end" class="form-control">
+                    <option value="39.229689, 9.107713">Ingegneria - Blocco Q</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="mode" class="form-control">
+                    <option>Seleziona il mezzo di trasporto</option>
+                    <option value="DRIVING">Driving</option>
+                    <option value="WALKING">Walking</option>
+                    <option value="BICYCLING">Bicycling</option>
+                    <option value="TRANSIT">Mezzi pubblici</option>
+                </select>
+            </div>
+        </form>
 
-    <div id="map-canvas">
-    </div>
-
-    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="../../bower_components/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
-    <script src="../js/maps.js"></script>
-  </body>
+        <div id="map-canvas">
+        </div>
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../../bower_components/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+        <script src="../js/maps.js"></script>
+    </body>
 </html>
