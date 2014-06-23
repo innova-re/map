@@ -7,30 +7,28 @@
      * @constructor
      */
 
-    var MapWidget = function ($element) {
-    	this.$element = $element;
-    	this.contentString = $element.find('.content');
+    var MapWidget = function ($formMap) {
 
-    	this.zoom = parseInt($element.find('input[name="zoom"]').val(), 10);
-    	this.lat = parseFloat($element.find('input[name="lat"]').val(), 10);
-    	this.lng = parseFloat($element.find('input[name="lng"]').val(), 10);
-    	this.latLng = new google.maps.LatLng(this.lat, this.lng);
+    	var endValue = $formMap.find('.js-form-maps-end :selected').val().split(',');
+    	this.zoom = parseInt(endValue[2], 10);
+    	this.latLng = new google.maps.LatLng(parseFloat(endValue[0], 10), parseFloat(endValue[1], 10));
+    	this.$formMap = $formMap;
 
-    	this.mapOptions = {
+	    this.map = new google.maps.Map($('#map-canvas')[0], {
 			zoom: this.zoom,
 			center: this.latLng,
 			// mapTypeId: google.maps.MapTypeId.SATELLITE
-	    };
-	    this.map = new google.maps.Map($('#map-canvas')[0], this.mapOptions);
+	    });
 
-	    $('.js-calc-route').click($.proxy(this.calcRoute, this));
+	    
 
 	    // TODO it should work with an array of markers
 	    this.setMarker();
-	    this.setInfoWindow();
+	    // this.setInfoWindow();
 	    this.showLine();
 	    this.setPolygon();
 	    this.directionsDisplay();
+	    this.$formMap.find('.js-calc-route').click($.proxy(this.calcRoute, this));
     };
 
     MapWidget.prototype = {
@@ -42,7 +40,7 @@
 	            position: this.latLng,
 	            map: this.map,
 	            animation: google.maps.Animation.DROP,
-	            title: 'Universit&agrave; degli Studi di Cagliari'
+	            // title: 'Universit&agrave; degli Studi di Cagliari'
 	        }); 
     	},
 
@@ -151,16 +149,15 @@
 	    },
 
 		calcRoute: function() {
-			var start = document.getElementById("start").value;
-			var end = document.getElementById("end").value;
-			var selectedMode = document.getElementById("mode").value;
-			var request = {
-				origin:start,
-				destination:end,
-				travelMode: google.maps.TravelMode[selectedMode]
-			};
-
-			var that = this;
+			var that = this,
+				start = this.$formMap.find('#start').val(),
+				selectedMode = this.$formMap.find('#mode').val(),
+				request = {
+					origin: start,
+					destination: this.latLng,
+					travelMode: google.maps.TravelMode[selectedMode]
+				};
+			
 			this.directionsService.route(request, function(result, status) {
 				if (status === google.maps.DirectionsStatus.OK) {
 					that.directionsDisplay.setDirections(result);
@@ -169,13 +166,17 @@
 		}
     };
 
-	var initialize = function () {
-		var $element = $('#map-option') ;
-		var mapWidget = new MapWidget($element);
+	var initialize = function ($formMap) {
+		var mapWidget = new MapWidget($formMap);
 	};
 
 	$(function() {
-		initialize();
+		var $formMap = $('.js-form-maps');
+
+		initialize($formMap);
+		$formMap.find('.js-form-maps-end').change(function () {
+			initialize($formMap);
+		});
 	});
 
 })(jQuery, window.parseInt, window.parseFloat);
