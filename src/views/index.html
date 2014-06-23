@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <style type="text/css">
+            html { height: 100% }
+            body { height: 100%; margin: 0; padding: 0 }
+            #map-canvas { height: 100% }
+        </style>
+        <link href="http://dimsemenov.com/plugins/magnific-popup/site-assets/all.min.css?v=0.9.9" rel="stylesheet" />
+        <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/main.css">
+    </head>
+
+    <body>
+
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                <label class="control-label" for="start">Partenza</label>
+                <input type="text" class="form-control" id="start" value="via Ospedale, 121 Cagliari" size="50">
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="end">Arrivo</label>
+                <select id="end" class="form-control">
+                    <option value="39.229689, 9.107713">Ingegneria - Blocco Q</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="mode" class="form-control">
+                    <option>Seleziona il mezzo di trasporto</option>
+                    <option value="WALKING">A piedi</option>
+                    <option value="TRANSIT">Mezzi pubblici</option>
+                    <option value="DRIVING">In macchina</option>
+                </select>
+            </div>
+        </form>
+
+        <!-- TODO take this parameter from a JSON file -->
+        <div id="map-canvas">
+
+            <div id="map-option">
+                <input name="lat" type="text" value="39.229689">
+                <input name="lng" type="text" value="9.107713">
+                <input name="zoom" type="text" value="19">
+            </div>
+
+            <div id="map-blocks">
+                <div class="map-block">
+
+                    <div class="map info-window">
+
+                        <div class="content">
+                            <div id="siteNotice"></div>
+                            <h1 id="firstHeading" class="firstHeading">Universit&agrave; degli Studi di Cagliari</h1>
+                            <div id="bodyContent">
+                                <p>Facolt&agrave; di Ingegneria e Architettura, ingresso via Is Maglias.</p>
+                                <p>
+                                    <a target="_" href="http://facolta.unica.it/ingegneriarchitettura/">
+                                        Facolt&agrave; di Ingegneria e Architettura 
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- TODO use requirejs to load js module -->
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../../bower_components/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+        <script src="../js/maps.js"></script>
+    </body>
+</html>

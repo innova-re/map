@@ -1,0 +1,19 @@
+{
+  "name": "lab-map-embed",
+  "version": "0.0.0",
+  "homepage": "https://github.com/innova-re/lab-map-embed",
+  "authors": [
+    "Antonio Pierro <antonio.pierro@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "magnific-popup": "0.9.9"
+  }
+}
