@@ -28,16 +28,47 @@
             <div class="form-group">
                 <select id="mode" class="form-control">
                     <option>Seleziona il mezzo di trasporto</option>
-                    <option value="DRIVING">Driving</option>
-                    <option value="WALKING">Walking</option>
-                    <option value="BICYCLING">Bicycling</option>
+                    <option value="WALKING">A piedi</option>
                     <option value="TRANSIT">Mezzi pubblici</option>
+                    <option value="DRIVING">In macchina</option>
                 </select>
             </div>
         </form>
 
         <div id="map-canvas">
+
+            <div id="map-option">
+                <input name="lat" type="text" value="39.229689">
+                <input name="lng" type="text" value="9.107713">
+                <input name="zoom" type="text" value="19">
+            </div>
+
+            <div id="map-blocks">
+                <div class="map-block">
+
+                    <div class="map info-window">
+
+                        <div class="content">
+                            <div id="siteNotice"></div>
+                            <h1 id="firstHeading" class="firstHeading">Universit&agrave; degli Studi di Cagliari</h1>
+                            <div id="bodyContent">
+                                <p>Facolt&agrave; di Ingegneria e Architettura, ingresso via Is Maglias.</p>
+                                <p>
+                                    <a target="_" href="http://facolta.unica.it/ingegneriarchitettura/">
+                                        Facolt&agrave; di Ingegneria e Architettura 
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
         </div>
+
+
+
         <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
         <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
         <script src="../../bower_components/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
