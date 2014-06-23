@@ -25,6 +25,7 @@
 
 	    $('#mode').change($.proxy(this.calcRoute, this));
 
+	    // TODO it should work with an array of markers
 	    this.setMarker();
 	    this.setInfoWindow();
 	    this.showLine();
