@@ -23,7 +23,7 @@
 	    };
 	    this.map = new google.maps.Map($('#map-canvas')[0], this.mapOptions);
 
-	    $('#mode').change($.proxy(this.calcRoute, this));
+	    $('.js-calc-route').click($.proxy(this.calcRoute, this));
 
 	    // TODO it should work with an array of markers
 	    this.setMarker();
