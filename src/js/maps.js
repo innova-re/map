@@ -6,7 +6,6 @@
      * @param element
      * @constructor
      */
-
     var MapWidget = function ($formMap) {
 
     	var endValue = $formMap.find('.js-form-maps-end :selected').val().split(',');
@@ -17,16 +16,14 @@
 	    this.map = new google.maps.Map($('#map-canvas')[0], {
 			zoom: this.zoom,
 			center: this.latLng,
-			// mapTypeId: google.maps.MapTypeId.SATELLITE
+			mapTypeId: google.maps.MapTypeId.SATELLITE
 	    });
-
-	    
 
 	    // TODO it should work with an array of markers
 	    this.setMarker();
 	    // this.setInfoWindow();
 	    this.showLine();
-	    this.setPolygon();
+	    $.each($formMap.find('.js-blocks .coordiantes'), $.proxy(this.setPolygon, this));
 	    this.directionsDisplay();
 	    this.$formMap.find('.js-calc-route').click($.proxy(this.calcRoute, this));
     };
@@ -40,7 +37,6 @@
 	            position: this.latLng,
 	            map: this.map,
 	            animation: google.maps.Animation.DROP,
-	            // title: 'Universit&agrave; degli Studi di Cagliari'
 	        }); 
     	},
 
@@ -74,6 +70,7 @@
 				scale: 4
 			};
 
+			// TODO use getCoordinates
 			var lineCoordinates = [
 				new google.maps.LatLng(39.229689, 9.107713),
 				new google.maps.LatLng(39.22981,9.10814),
@@ -94,18 +91,12 @@
 			});
 	    },
 
-	    setPolygon:  function () {
-	        // Define the LatLng coordinates for the Blocco Q.
-			var triangleCoords = [
-				new google.maps.LatLng(39.230515, 9.107900),
-				new google.maps.LatLng(39.229865, 9.108101),
-				new google.maps.LatLng(39.230101, 9.107380),
-				new google.maps.LatLng(39.230515, 9.107900)
-			];
-
+	    setPolygon:  function (i, element) {
 			// Construct the polygon.
+			this.$element = $(element);
+
 			this.polygon = new google.maps.Polygon({
-				paths: triangleCoords,
+				paths: this.getCoordinates(),
 				strokeColor: '#FF0000',
 				strokeOpacity: 0.8,
 				strokeWeight: 2,
@@ -114,22 +105,28 @@
 			});
 
 			this.polygon.setMap(this.map);
-
-			google.maps.event.addListener(this.polygon, 'click', this.showPolygonInfo);
+			google.maps.event.addListener(this.polygon, 'click', $.proxy(this.showPolygonInfo, this));
 
 	    },
 
+	    getCoordinates: function (coordinates) {
+	        var LatLng = google.maps.LatLng;
+	        var polygonCoords = [];
+	        var coordinates = this.$element.attr('data-coords').split(',');
+
+	        for(var i = 0; i < coordinates.length; i++) {
+	        	polygonCoords.push(new LatLng(coordinates[i], coordinates[i + 1]));
+	        	i = i + 1;
+	        }
+
+	        console.log(coordinates);
+	        return polygonCoords;
+	    },
+
 		showPolygonInfo: function (event) {
-
-			var contentString = '<b>Blocco Q</b><br>' +
-				'<ul>' +
-				'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Primo piano</a></li>' +
-				'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Secondo piano</a></li>' +
-				'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Terzo piano</a></li>' +
-				'</ul><br>';
-
 			var infoWindow = new google.maps.InfoWindow({
-				content: contentString
+				// TODO try to get the info from the polygon
+				content: this.$element.html()
 			});
 
 			infoWindow.setPosition(event.latLng);
@@ -149,6 +146,7 @@
 	    },
 
 		calcRoute: function() {
+			this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 			var that = this,
 				start = this.$formMap.find('#start').val(),
 				selectedMode = this.$formMap.find('#mode').val(),
