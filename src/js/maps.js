@@ -20,8 +20,7 @@
 	    });
 
 	    // TODO it should work with an array of markers
-	    this.setMarker();
-	    // this.setInfoWindow();
+	    // this.setMarker();
 	    this.showLine();
 	    $.each($formMap.find('.js-blocks .coordiantes'), $.proxy(this.setPolygon, this));
 	    this.directionsDisplay();
@@ -38,29 +37,6 @@
 	            map: this.map,
 	            animation: google.maps.Animation.DROP,
 	        }); 
-    	},
-
-    	setInfoWindow: function (event) {
-			var contentString = '<div class="content">'+
-				'<div id="siteNotice">'+
-				'</div>'+
-				'<h1 id="firstHeading" class="firstHeading">Universit&agrave; degli Studi di Cagliari</h1>'+
-				'<div id="bodyContent">'+
-				'<p>Facolt&agrave; di Ingegneria e Architettura, ingresso via Is Maglias.</p>'+
-				'<p><a target="_" href="http://facolta.unica.it/ingegneriarchitettura/">Facolt&agrave; di Ingegneria e Architettura </a></p>'+
-				'<br><br></div>'+
-				'</div>';
-
-			var infowindow = new google.maps.InfoWindow({
-				content: contentString
-			});
-
-			/* TODO fix the position. It should not be necessary for the marker */
-			infowindow.setPosition(this.latLng);
-
-	        google.maps.event.addListener(this.marker, 'click', function() {
-				infowindow.open(this.map, this.marker);
-			});
     	},
 
 	 	showLine: function () {
@@ -94,6 +70,8 @@
 	    setPolygon:  function (i, element) {
 			// Construct the polygon.
 			this.$element = $(element);
+			var html = this.$element.html();
+			var map = this.map;
 
 			this.polygon = new google.maps.Polygon({
 				paths: this.getCoordinates(),
@@ -105,8 +83,8 @@
 			});
 
 			this.polygon.setMap(this.map);
-			google.maps.event.addListener(this.polygon, 'click', $.proxy(this.showPolygonInfo, this));
 
+			google.maps.event.addListener(this.polygon, 'click', $.proxy(this.showPolygonInfo, this));
 	    },
 
 	    getCoordinates: function (coordinates) {
@@ -119,7 +97,6 @@
 	        	i = i + 1;
 	        }
 
-	        console.log(coordinates);
 	        return polygonCoords;
 	    },
 
