@@ -19,10 +19,10 @@
 			mapTypeId: google.maps.MapTypeId.SATELLITE
 	    });
 
-	    // TODO it should work with an array of markers
-	    // this.setMarker();
+	    this.setMarker();
 	    this.showLine();
-	    $.each($formMap.find('.js-blocks .coordiantes'), $.proxy(this.setPolygon, this));
+	    this.setPolygon();
+
 	    this.directionsDisplay();
 	    this.$formMap.find('.js-calc-route').click($.proxy(this.calcRoute, this));
     };
@@ -67,14 +67,11 @@
 			});
 	    },
 
-	    setPolygon:  function (i, element) {
-			// Construct the polygon.
-			this.$element = $(element);
-			var html = this.$element.html();
-			var map = this.map;
+	   	setPolygon: function () {
+	   		var coordinates = $('.js-form-maps-end :selected').attr('data-coords');
 
-			this.polygon = new google.maps.Polygon({
-				paths: this.getCoordinates(),
+	   		this.polygon = new google.maps.Polygon({
+				paths: this.getCoordinates(coordinates),
 				strokeColor: '#FF0000',
 				strokeOpacity: 0.8,
 				strokeWeight: 2,
@@ -83,14 +80,13 @@
 			});
 
 			this.polygon.setMap(this.map);
-
 			google.maps.event.addListener(this.polygon, 'click', $.proxy(this.showPolygonInfo, this));
-	    },
+	   	},
 
 	    getCoordinates: function (coordinates) {
 	        var LatLng = google.maps.LatLng;
 	        var polygonCoords = [];
-	        var coordinates = this.$element.attr('data-coords').split(',');
+	        var coordinates = coordinates.split(',');
 
 	        for(var i = 0; i < coordinates.length; i++) {
 	        	polygonCoords.push(new LatLng(coordinates[i], coordinates[i + 1]));
@@ -101,18 +97,14 @@
 	    },
 
 		showPolygonInfo: function (event) {
+			var dataPlan = $('.js-form-maps-end :selected').attr('data-plan');
+			$('.info-template img').attr('src', '../images/' + dataPlan);
+			var infoTemplate = $('.info-template').html();
 			var infoWindow = new google.maps.InfoWindow({
-				// TODO try to get the info from the polygon
-				content: this.$element.html()
+				content: infoTemplate
 			});
-
 			infoWindow.setPosition(event.latLng);
-
 			infoWindow.open(this.map);
-
-			$('.test-popup-link').magnificPopup({
-				type: 'image'
-			});
 	    },
 
 	    directionsDisplay: function () {
