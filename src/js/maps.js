@@ -20,9 +20,9 @@
 			mapTypeId: google.maps.MapTypeId.SATELLITE
 	    });
 
-	    // this.setMarker();
+	    this.setMarker();
 	    // this.showLine();
-	    this.setPolygon();
+	    // this.setPolygon();
 
 	    this.directionsDisplay();
 	    this.$formMap.find('.js-calc-route').click($.proxy(this.calcRoute, this));
