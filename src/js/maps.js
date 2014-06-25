@@ -8,7 +8,8 @@
      */
     var MapWidget = function ($formMap) {
 
-    	var endValue = $formMap.find('.js-form-maps-end :selected').val().split(',');
+    	this.$selectedElement = $formMap.find('.js-form-maps-end :selected');
+    	var endValue = this.$selectedElement.val().split(',');
     	this.zoom = parseInt(endValue[2], 10);
     	this.latLng = new google.maps.LatLng(parseFloat(endValue[0], 10), parseFloat(endValue[1], 10));
     	this.$formMap = $formMap;
@@ -40,22 +41,15 @@
     	},
 
 	 	showLine: function () {
+	 		var coordinates = this.$selectedElement.attr('data-walking-path');
 			var lineSymbol = {
 				path: google.maps.SymbolPath.CIRCLE,
 				strokeOpacity: 1,
 				scale: 4
 			};
 
-			// TODO use getCoordinates
-			var lineCoordinates = [
-				new google.maps.LatLng(39.229689, 9.107713),
-				new google.maps.LatLng(39.22981,9.10814),
-				new google.maps.LatLng(39.230175,9.108046),
-				new google.maps.LatLng(39.230185,9.107969)
-			];
-
 			var line = new google.maps.Polyline({
-				path: lineCoordinates,
+				path: this.getCoordinates(coordinates),
 				strokeOpacity: 0,
 				strokeColor: '#0066FF',
 				icons: [{
@@ -68,7 +62,7 @@
 	    },
 
 	   	setPolygon: function () {
-	   		var coordinates = $('.js-form-maps-end :selected').attr('data-coords');
+	   		var coordinates = this.$selectedElement.attr('data-coords');
 
 	   		this.polygon = new google.maps.Polygon({
 				paths: this.getCoordinates(coordinates),
@@ -97,7 +91,7 @@
 	    },
 
 		showPolygonInfo: function (event) {
-			var dataPlan = $('.js-form-maps-end :selected').attr('data-plan');
+			var dataPlan = this.$selectedElement.attr('data-plan');
 			$('.info-template img').attr('src', '../images/' + dataPlan);
 			var infoTemplate = $('.info-template').html();
 			var infoWindow = new google.maps.InfoWindow({
@@ -115,7 +109,6 @@
 	    },
 
 		calcRoute: function() {
-			this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 			var that = this,
 				start = this.$formMap.find('#start').val(),
 				selectedMode = this.$formMap.find('#mode').val(),
@@ -124,7 +117,8 @@
 					destination: this.latLng,
 					travelMode: google.maps.TravelMode[selectedMode]
 				};
-			
+
+			this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 			this.directionsService.route(request, function(result, status) {
 				if (status === google.maps.DirectionsStatus.OK) {
 					that.directionsDisplay.setDirections(result);
