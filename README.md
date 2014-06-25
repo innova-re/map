@@ -14,7 +14,7 @@ I want to help a user to get direction to a specific place which is not reachabl
 The code needed to provide these information includes the following attributes:
 
  - **data-coords**: it is used to add shapes to your map. The specified value consists of an array of latitude and longitude locations. The library will create a series of line segments that connect those locations in an ordered sequence as displayed in the following picture.
- ![](src/images/ING-laboratorio-multifunzionale.jpg?raw=true)
+ ![](src/images/readme-data-coords.png?raw=true)
 
 ```
 <option 

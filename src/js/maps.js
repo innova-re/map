@@ -20,8 +20,8 @@
 			mapTypeId: google.maps.MapTypeId.SATELLITE
 	    });
 
-	    this.setMarker();
-	    this.showLine();
+	    // this.setMarker();
+	    // this.showLine();
 	    this.setPolygon();
 
 	    this.directionsDisplay();
