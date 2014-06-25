@@ -80,7 +80,7 @@
 			});
 
 			this.polygon.setMap(this.map);
-			google.maps.event.addListener(this.polygon, 'click', $.proxy(this.showPolygonInfo, this));
+			google.maps.event.addListener(this.polygon, 'mouseover', $.proxy(this.showPolygonInfo, this));
 	   	},
 
 	    getCoordinates: function (coordinates) {
