@@ -6,31 +6,26 @@
      * @param element
      * @constructor
      */
+    var MapWidget = function ($formMap) {
 
-    var MapWidget = function ($element) {
-    	this.$element = $element;
-    	this.contentString = $element.find('.content');
+    	this.$selectedElement = $formMap.find('.js-form-maps-end :selected');
+    	var endValue = this.$selectedElement.val().split(',');
+    	this.zoom = parseInt(endValue[2], 10);
+    	this.latLng = new google.maps.LatLng(parseFloat(endValue[0], 10), parseFloat(endValue[1], 10));
+    	this.$formMap = $formMap;
 
-    	this.zoom = parseInt($element.find('input[name="zoom"]').val(), 10);
-    	this.lat = parseFloat($element.find('input[name="lat"]').val(), 10);
-    	this.lng = parseFloat($element.find('input[name="lng"]').val(), 10);
-    	this.latLng = new google.maps.LatLng(this.lat, this.lng);
-
-    	this.mapOptions = {
+	    this.map = new google.maps.Map($('#map-canvas')[0], {
 			zoom: this.zoom,
 			center: this.latLng,
-			// mapTypeId: google.maps.MapTypeId.SATELLITE
-	    };
-	    this.map = new google.maps.Map($('#map-canvas')[0], this.mapOptions);
+			mapTypeId: google.maps.MapTypeId.SATELLITE
+	    });
 
-	    $('#mode').change($.proxy(this.calcRoute, this));
-
-	    // TODO it should work with an array of markers
 	    this.setMarker();
-	    this.setInfoWindow();
 	    this.showLine();
 	    this.setPolygon();
+
 	    this.directionsDisplay();
+	    this.$formMap.find('.js-calc-route').click($.proxy(this.calcRoute, this));
     };
 
     MapWidget.prototype = {
@@ -42,49 +37,19 @@
 	            position: this.latLng,
 	            map: this.map,
 	            animation: google.maps.Animation.DROP,
-	            title: 'Universit&agrave; degli Studi di Cagliari'
 	        }); 
     	},
 
-    	setInfoWindow: function (event) {
-			var contentString = '<div class="content">'+
-				'<div id="siteNotice">'+
-				'</div>'+
-				'<h1 id="firstHeading" class="firstHeading">Universit&agrave; degli Studi di Cagliari</h1>'+
-				'<div id="bodyContent">'+
-				'<p>Facolt&agrave; di Ingegneria e Architettura, ingresso via Is Maglias.</p>'+
-				'<p><a target="_" href="http://facolta.unica.it/ingegneriarchitettura/">Facolt&agrave; di Ingegneria e Architettura </a></p>'+
-				'<br><br></div>'+
-				'</div>';
-
-			var infowindow = new google.maps.InfoWindow({
-				content: contentString
-			});
-
-			/* TODO fix the position. It should not be necessary for the marker */
-			infowindow.setPosition(this.latLng);
-
-	        google.maps.event.addListener(this.marker, 'click', function() {
-				infowindow.open(this.map, this.marker);
-			});
-    	},
-
 	 	showLine: function () {
+	 		var coordinates = this.$selectedElement.attr('data-walking-path');
 			var lineSymbol = {
 				path: google.maps.SymbolPath.CIRCLE,
 				strokeOpacity: 1,
 				scale: 4
 			};
 
-			var lineCoordinates = [
-				new google.maps.LatLng(39.229689, 9.107713),
-				new google.maps.LatLng(39.22981,9.10814),
-				new google.maps.LatLng(39.230175,9.108046),
-				new google.maps.LatLng(39.230185,9.107969)
-			];
-
 			var line = new google.maps.Polyline({
-				path: lineCoordinates,
+				path: this.getCoordinates(coordinates),
 				strokeOpacity: 0,
 				strokeColor: '#0066FF',
 				icons: [{
@@ -96,18 +61,11 @@
 			});
 	    },
 
-	    setPolygon:  function () {
-	        // Define the LatLng coordinates for the Blocco Q.
-			var triangleCoords = [
-				new google.maps.LatLng(39.230515, 9.107900),
-				new google.maps.LatLng(39.229865, 9.108101),
-				new google.maps.LatLng(39.230101, 9.107380),
-				new google.maps.LatLng(39.230515, 9.107900)
-			];
+	   	setPolygon: function () {
+	   		var coordinates = this.$selectedElement.attr('data-coords');
 
-			// Construct the polygon.
-			this.polygon = new google.maps.Polygon({
-				paths: triangleCoords,
+	   		this.polygon = new google.maps.Polygon({
+				paths: this.getCoordinates(coordinates),
 				strokeColor: '#FF0000',
 				strokeOpacity: 0.8,
 				strokeWeight: 2,
@@ -116,31 +74,31 @@
 			});
 
 			this.polygon.setMap(this.map);
+			google.maps.event.addListener(this.polygon, 'mouseover', $.proxy(this.showPolygonInfo, this));
+	   	},
 
-			google.maps.event.addListener(this.polygon, 'click', this.showPolygonInfo);
+	    getCoordinates: function (coordinates) {
+	        var LatLng = google.maps.LatLng;
+	        var polygonCoords = [];
+	        var coordinates = coordinates.split(',');
 
+	        for(var i = 0; i < coordinates.length; i++) {
+	        	polygonCoords.push(new LatLng(coordinates[i], coordinates[i + 1]));
+	        	i = i + 1;
+	        }
+
+	        return polygonCoords;
 	    },
 
 		showPolygonInfo: function (event) {
-
-			var contentString = '<b>Blocco Q</b><br>' +
-				'<ul>' +
-				'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Primo piano</a></li>' +
-				'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Secondo piano</a></li>' +
-				'<li><a class="test-popup-link" href="../images/ING-bloccoQ.jpg">Terzo piano</a></li>' +
-				'</ul><br>';
-
+			var dataPlan = this.$selectedElement.attr('data-plan');
+			$('.info-template img').attr('src', '../images/' + dataPlan);
+			var infoTemplate = $('.info-template').html();
 			var infoWindow = new google.maps.InfoWindow({
-				content: contentString
+				content: infoTemplate
 			});
-
 			infoWindow.setPosition(event.latLng);
-
 			infoWindow.open(this.map);
-
-			$('.test-popup-link').magnificPopup({
-				type: 'image'
-			});
 	    },
 
 	    directionsDisplay: function () {
@@ -151,16 +109,16 @@
 	    },
 
 		calcRoute: function() {
-			var start = document.getElementById("start").value;
-			var end = document.getElementById("end").value;
-			var selectedMode = document.getElementById("mode").value;
-			var request = {
-				origin:start,
-				destination:end,
-				travelMode: google.maps.TravelMode[selectedMode]
-			};
+			var that = this,
+				start = this.$formMap.find('#start').val(),
+				selectedMode = this.$formMap.find('#mode').val(),
+				request = {
+					origin: start,
+					destination: this.latLng,
+					travelMode: google.maps.TravelMode[selectedMode]
+				};
 
-			var that = this;
+			this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 			this.directionsService.route(request, function(result, status) {
 				if (status === google.maps.DirectionsStatus.OK) {
 					that.directionsDisplay.setDirections(result);
@@ -169,13 +127,17 @@
 		}
     };
 
-	var initialize = function () {
-		var $element = $('#map-option') ;
-		var mapWidget = new MapWidget($element);
+	var initialize = function ($formMap) {
+		var mapWidget = new MapWidget($formMap);
 	};
 
 	$(function() {
-		initialize();
+		var $formMap = $('.js-form-maps');
+
+		initialize($formMap);
+		$formMap.find('.js-form-maps-end').change(function () {
+			initialize($formMap);
+		});
 	});
 
 })(jQuery, window.parseInt, window.parseFloat);
