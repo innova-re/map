@@ -4,7 +4,8 @@ body {
 	padding: 0;
 }
 
-form {
+form.form-map {
+	display: none;
 	margin-left: 80px;
     margin-top: 10px;
     position: absolute;
@@ -17,4 +18,8 @@ html {
 
 #map-canvas { 
 	height: 100% 
+}
+
+img.poly-info {
+	width: 100%;
 }
