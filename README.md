@@ -6,6 +6,10 @@ Innova.RE Map
 
 "Innova.RE Map" lets you extend HTML vocabulary to build your custom map. 
 
+Demo
+--------------
+[http://innova-re.github.io/map/](http://innova-re.github.io/map/)
+
 Examples
 --------------
 
