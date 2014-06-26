@@ -4,12 +4,12 @@
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <link href="http://dimsemenov.com/plugins/magnific-popup/site-assets/all.min.css?v=0.9.9" rel="stylesheet" />
         <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="./src/css/main.css">
     </head>
 
     <body>
 
-        <form class="form-inline js-form-maps" role="form">
+        <form class="form-inline form-map js-form-maps" role="form">
             <div class="form-group">
                 <label class="control-label" for="start">Partenza</label>
                 <input type="text" class="form-control" id="start" value="via Ospedale, 121 Cagliari" size="50">
@@ -21,14 +21,14 @@
                         value="39.229686, 9.107726, 19"
                         data-coords="39.230203, 9.107526, 39.230514, 9.107891, 39.229883, 9.108100, 39.229837, 9.107790, 39.230041, 9.107548, 39.230203, 9.107526"
                         data-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
-                        data-plan="ING-laboratorio-software.jpg">
+                        data-plan="src/images/ING-laboratorio-software.jpg">
                         Ingegneria - Laboratorio Software
                     </option>
                     <option 
                         value="39.229686, 9.107726, 19"
                         data-coords="39.230203, 9.107526, 39.230514, 9.107891, 39.229883, 9.108100, 39.229837, 9.107790, 39.230041, 9.107548, 39.230203, 9.107526"
                         data-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
-                        data-plan="ING-laboratorio-multifunzionale.jpg">
+                        data-plan="src/images/ING-laboratorio-multifunzionale.jpg">
                         Ingegneria - Laboratorio Multifunzionale
                     </option>
                 </select>
@@ -43,13 +43,6 @@
                 </select>
             </div>
 
-            <div class="info-template hide">
-                <div class="info-container">
-                    <h4>Planimetria del bloocco Q</h4>
-                    <img src="../images/" width="100%">
-                </div> 
-            </div>
-
             <button type="button" class="btn btn-default js-calc-route">Invio</button>
 
         </form>
@@ -59,6 +52,6 @@
         <!-- TODO use requirejs to load js module -->
         <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="../js/maps.js"></script>
+        <script src="./src/js/maps.js"></script>
     </body>
 </html>
