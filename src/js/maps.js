@@ -21,8 +21,8 @@
 	    });
 
 	    this.setMarker();
-	    // this.showLine();
-	    // this.setPolygon();
+	    this.showLine();
+	    this.setPolygon();
 
 	    this.directionsDisplay();
 	    this.$formMap.find('.js-calc-route').click($.proxy(this.calcRoute, this));
@@ -74,7 +74,7 @@
 			});
 
 			this.polygon.setMap(this.map);
-			google.maps.event.addListener(this.polygon, 'mouseover', $.proxy(this.showPolygonInfo, this));
+			google.maps.event.addListener(this.polygon, 'click', $.proxy(this.showPolygonInfo, this));
 	   	},
 
 	    getCoordinates: function (coordinates) {
@@ -91,6 +91,7 @@
 	    },
 
 		showPolygonInfo: function (event) {
+
 			var dataPlan = this.$selectedElement.attr('data-plan');
 			$('.info-template img').attr('src', '../images/' + dataPlan);
 			var infoTemplate = $('.info-template').html();
@@ -98,7 +99,7 @@
 				content: infoTemplate
 			});
 			infoWindow.setPosition(event.latLng);
-			infoWindow.open(this.map);
+			infoWindow.open(this.map, this.marker);
 	    },
 
 	    directionsDisplay: function () {

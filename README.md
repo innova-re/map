@@ -60,6 +60,6 @@ Version
 License
 ----
 
-MIT
+## License
 
-Created by @an_pierro
+MIT, see [LICENSE.md](./LICENSE.md).
