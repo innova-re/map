@@ -9,23 +9,23 @@
 
     <body>
 
-        <form class="form-inline form-map js-form-maps" role="form">
+        <form class="form-inline map-form" role="form">
             <div class="form-group">
                 <label class="control-label" for="start">Partenza</label>
-                <input type="text" class="form-control" id="start" value="via Ospedale, 121 Cagliari" size="50">
+                <input type="text" class="form-control map-departure" value="via Ospedale, 121 Cagliari" size="50">
             </div>
             <div class="form-group">
                 <label class="control-label">Arrivo</label>
-                <select class="form-control js-form-maps-end">
+                <select class="form-control map-destination">
                     <option 
-                        value="39.229686, 9.107726, 19"
+                        data-latLng="39.229686, 9.107726"
                         data-coords="39.230203, 9.107526, 39.230514, 9.107891, 39.229883, 9.108100, 39.229837, 9.107790, 39.230041, 9.107548, 39.230203, 9.107526"
                         data-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
                         data-plan="src/images/ING-laboratorio-software.jpg">
                         Ingegneria - Laboratorio Software
                     </option>
                     <option 
-                        value="39.229686, 9.107726, 19"
+                        data-latLng="39.229686, 9.107726"
                         data-coords="39.230203, 9.107526, 39.230514, 9.107891, 39.229883, 9.108100, 39.229837, 9.107790, 39.230041, 9.107548, 39.230203, 9.107526"
                         data-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
                         data-plan="src/images/ING-laboratorio-multifunzionale.jpg">
@@ -35,7 +35,7 @@
             </div>
 
             <div class="form-group">
-                <select id="mode" class="form-control">
+                <select class="form-control map-mode">
                     <option value="DRIVING">Seleziona il mezzo di trasporto</option>
                     <option value="WALKING">A piedi</option>
                     <option value="TRANSIT">Mezzi pubblici</option>
@@ -43,11 +43,11 @@
                 </select>
             </div>
 
-            <button type="button" class="btn btn-default js-calc-route">Invio</button>
+            <button type="button" class="btn btn-default map-setRoute">Invio</button>
 
         </form>
 
-        <div id="map-canvas"></div>
+        <div class="map-canvas"></div>
 
         <!-- TODO use requirejs to load js module -->
         <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
