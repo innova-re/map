@@ -1,3 +1,12 @@
+/*!
+ * Innovare.Map JavaScript Library v0.1
+ * https://github.com/innova-re/map
+ *
+ * Copyright 2014, Antonio Pierro
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Date: Mon June 30
+ */
 /* global jQuery, window */
 (function ($, float) {
 	'use strict';
