@@ -3,29 +3,42 @@
 	'use strict';
 
 	/**
-     * @param $formMap
+     * @param $mapForm
      * @constructor
      */
     var MapWidget = function ($mapForm) {
 
-    	this.$selectedMap = $mapForm.find('.map-destination :selected');
-    	var latLng = this.$selectedMap.attr('data-latLng').split(',');
-    	this.latLng = new google.maps.LatLng(float(latLng[0], 10), float(latLng[1], 10));
-    	this.zoom = 19;
-    	this.$mapForm = $mapForm;
-	    this.map = this.getMap();
+		this.$selectedMap = $mapForm.find('.map-destination :selected');
+		this.latLng = this.getLatLng(this.$selectedMap.attr('map-latLng'));
+		this.latLngMarker = this.getLatLng(this.$selectedMap.attr('map-marker'));
+		this.zoom = 19;
+		this.$mapForm = $mapForm;
+		this.map = this.getMap();
+		this.dataMarker = this.$selectedMap.attr('map-marker');
+		this.dataMarkerImage = this.$selectedMap.attr('map-marker-image');
 
-	    this.setMarker();
-	    this.setLine();
-	    this.setPolygon();
-	    this.setDirectionsOnMap();
-	    this.$mapForm.show();
-	    this.$mapForm.find('.map-setRoute').click($.proxy(this.setRoute, this));
     };
 
     MapWidget.prototype = {
 
     	constructor: MapWidget,
+
+		init: function () {
+			this.setMarker(this.latLng);
+		    this.setMarker(this.latLngMarker, this.dataMarkerImage);
+		    this.setLine();
+		    this.setDirectionsOnMap();
+			this.$mapForm.show();
+			this.$mapForm.find('.map-setRoute').click($.proxy(this.setRoute, this));
+			google.maps.event.addListener(this.map, 'zoom_changed', $.proxy(this.toggleMarker, this));
+			this.setInfoWindow(this.$selectedMap.attr('map-help'));
+		},
+
+		getLatLng: function (latLng) {
+			var latLng = latLng.split(',');
+
+			return new google.maps.LatLng(float(latLng[0], 10), float(latLng[1], 10));
+		},
 
     	getMap: function () {
     		return new google.maps.Map($('.map-canvas')[0], {
@@ -35,23 +48,22 @@
 		    });
     	},
 
-	    getCoordinates: function (coordinates) {
-	        var LatLng = google.maps.LatLng;
-	        var polygonCoords = [];
-	        var coordinates = coordinates.split(',');
+		getCoordinates: function (coordinates) {
+			var LatLngCoords = [];
+			var coordinates = coordinates.split(',');
 
-	        for(var i = 0; i < coordinates.length; i++) {
-	        	polygonCoords.push(new LatLng(coordinates[i], coordinates[i + 1]));
-	        	i = i + 1;
+			for(var i = 0; i < coordinates.length; i++) {
+				LatLngCoords.push(new google.maps.LatLng(coordinates[i], coordinates[i + 1]));
+				i = i + 1;
 	        }
 
-	        return polygonCoords;
+	        return LatLngCoords;
 	    },
 
 	    getPlan: function () {
 	    	return $('<img>')
 				.attr('class', 'poly-info')
-				.attr('src', this.$selectedMap.attr('data-plan'))[0];
+				.attr('src', this.$selectedMap.attr('map-plan'))[0];
 	    },
 
 	    getRequest: function () {
@@ -62,20 +74,6 @@
 	    	}
 	    },
 
-	   	setPolygon: function () {
-	   		this.polygon = new google.maps.Polygon({
-				paths: this.getCoordinates(this.$selectedMap.attr('data-coords')),
-				strokeColor: '#FF0000',
-				strokeOpacity: 0.8,
-				strokeWeight: 2,
-				fillColor: '#FF0000',
-				fillOpacity: 0.35
-			});
-
-			this.polygon.setMap(this.map);
-			google.maps.event.addListener(this.polygon, 'click', $.proxy(this.setPolygonInfo, this));
-	   	},
-
 	    setDirectionsOnMap: function () {
 			this.directionsService = new google.maps.DirectionsService();
 			this.directionsRenderer = new google.maps.DirectionsRenderer();
@@ -85,7 +83,7 @@
 	    setDirections: function (result, status) {
 			if (status === google.maps.DirectionsStatus.OK) {
 				this.directionsRenderer.setDirections(result);
-			} 	
+			}
 	    },
 
 	 	setLine: function () {
@@ -96,7 +94,7 @@
 			};
 
 			new google.maps.Polyline({
-				path: this.getCoordinates(this.$selectedMap.attr('data-walking-path')),
+				path: this.getCoordinates(this.$selectedMap.attr('map-walking-path')),
 				strokeOpacity: 0,
 				strokeColor: '#0066FF',
 				icons: [{
@@ -108,28 +106,47 @@
 			});
 	    },
 
-    	setMarker: function () {
+		setMarker: function (latLng, dataMarkerImage) {
     		this.marker = new google.maps.Marker({
-	            position: this.latLng,
+	            position: latLng,
 	            map: this.map,
 	            animation: google.maps.Animation.DROP,
-	        }); 
+	            icon: dataMarkerImage,
+	            draggable:true
+	        });
+	        google.maps.event.addListener(this.marker, 'click', $.proxy(this.setInfoWindow, this, this.getPlan()));
     	},
 
-		setPolygonInfo: function () {			
-			new google.maps.InfoWindow({
-				content: this.getPlan()
-			}).open(this.map, this.marker);
+		setInfoWindow: function (content) {
+			if (typeof(this.infoWindow) !== "undefined") {
+				this.infoWindow.close();
+			}
+			this.infoWindow = new google.maps.InfoWindow({
+				content: $('<div>').attr('class', 'info-window').html(content)[0]
+			});
+			this.infoWindow.open(this.map, this.marker);
 	    },
 
 		setRoute: function() {
 			this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 			this.directionsService.route(this.getRequest(), $.proxy(this.setDirections, this));
+		},
+
+		toggleMarker: function () {
+			if(this.map.zoom < 18) {
+				this.marker.setMap(null);
+				this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+			} else {
+				this.marker.setMap(this.map);
+				this.map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+			}
 		}
-    };
+	};
 
 	var initialize = function ($formMap) {
 		var mapWidget = new MapWidget($formMap);
+
+		mapWidget.init();
 	};
 
 	$(function() {
