@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-        <link href="http://dimsemenov.com/plugins/magnific-popup/site-assets/all.min.css?v=0.9.9" rel="stylesheet" />
+        <link href="http://dimsemenov.com/plugins/magnific-popup/site-assets/all.min.css?v=0.9.9" rel="stylesheet">
         <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="./src/css/main.css">
     </head>
@@ -17,18 +17,22 @@
             <div class="form-group">
                 <label class="control-label">Arrivo</label>
                 <select class="form-control map-destination">
-                    <option 
-                        data-latLng="39.229686, 9.107726"
-                        data-coords="39.230203, 9.107526, 39.230514, 9.107891, 39.229883, 9.108100, 39.229837, 9.107790, 39.230041, 9.107548, 39.230203, 9.107526"
-                        data-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
-                        data-plan="src/images/ING-laboratorio-software.jpg">
+                    <option
+                        map-help="<h3>Laboratorio Software</h3>Clicca il cappello da laurea per accedere alla planimetria dell'edificio."
+                        map-latLng="39.229686, 9.107726"
+                        map-marker="39.230084, 9.107868"
+                        map-marker-image="src/images/univ.png"
+                        map-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
+                        map-plan="src/images/ING-laboratorio-software.jpg">
                         Ingegneria - Laboratorio Software
                     </option>
-                    <option 
-                        data-latLng="39.229686, 9.107726"
-                        data-coords="39.230203, 9.107526, 39.230514, 9.107891, 39.229883, 9.108100, 39.229837, 9.107790, 39.230041, 9.107548, 39.230203, 9.107526"
-                        data-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
-                        data-plan="src/images/ING-laboratorio-multifunzionale.jpg">
+                    <option
+                        map-help="<h3>Laboratorio Multifunzionale</h3>Clicca il cappello da laurea per accedere alla planimetria dell'edificio."
+                        map-latLng="39.229686, 9.107726"
+                        map-marker="39.230084, 9.107868"
+                        map-marker-image="src/images/univ.png"
+                        map-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
+                        map-plan="src/images/ING-laboratorio-multifunzionale.jpg">
                         Ingegneria - Laboratorio Multifunzionale
                     </option>
                 </select>
@@ -52,6 +56,6 @@
         <!-- TODO use requirejs to load js module -->
         <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="./src/js/map.min.js"></script>
+        <script src="./src/js/maps.js"></script>
     </body>
 </html>
