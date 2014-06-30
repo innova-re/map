@@ -1,26 +1,26 @@
 /* global jQuery, window */
-(function ($, parseInt, parseFloat) {
+(function ($, float) {
 	'use strict';
 
 	/**
      * @param $formMap
      * @constructor
      */
-    var MapWidget = function ($formMap) {
+    var MapWidget = function ($mapForm) {
 
-    	this.$selectedMap = $formMap.find('.js-form-maps-end :selected');
-    	var endValue = this.$selectedMap.val().split(',');
-    	this.zoom = parseInt(endValue[2], 10);
-    	this.latLng = new google.maps.LatLng(parseFloat(endValue[0], 10), parseFloat(endValue[1], 10));
-    	this.$formMap = $formMap;
+    	this.$selectedMap = $mapForm.find('.map-destination :selected');
+    	var latLng = this.$selectedMap.attr('data-latLng').split(',');
+    	this.latLng = new google.maps.LatLng(float(latLng[0], 10), float(latLng[1], 10));
+    	this.zoom = 19;
+    	this.$mapForm = $mapForm;
 	    this.map = this.getMap();
 
 	    this.setMarker();
 	    this.setLine();
 	    this.setPolygon();
 	    this.setDirectionsOnMap();
-	    this.$formMap.show();
-	    this.$formMap.find('.js-calc-route').click($.proxy(this.setRoute, this));
+	    this.$mapForm.show();
+	    this.$mapForm.find('.map-setRoute').click($.proxy(this.setRoute, this));
     };
 
     MapWidget.prototype = {
@@ -28,7 +28,7 @@
     	constructor: MapWidget,
 
     	getMap: function () {
-    		return new google.maps.Map($('#map-canvas')[0], {
+    		return new google.maps.Map($('.map-canvas')[0], {
 				zoom: this.zoom,
 				center: this.latLng,
 				mapTypeId: google.maps.MapTypeId.SATELLITE
@@ -57,8 +57,8 @@
 	    getRequest: function () {
 	    	return {
 	    		destination: this.latLng,
-	    		origin: this.$formMap.find('#start').val(),
-	    		travelMode: google.maps.TravelMode[this.$formMap.find('#mode').val()]
+	    		origin: this.$mapForm.find('.map-departure').val(),
+	    		travelMode: google.maps.TravelMode[this.$mapForm.find('.map-mode').val()]
 	    	}
 	    },
 
@@ -133,12 +133,12 @@
 	};
 
 	$(function() {
-		var $formMap = $('.js-form-maps');
+		var $mapForm = $('.map-form');
 
-		initialize($formMap);
-		$formMap.find('.js-form-maps-end').change(function () {
-			initialize($formMap);
+		initialize($mapForm);
+		$mapForm.find('.map-destination').change(function () {
+			initialize($mapForm);
 		});
 	});
 
-})(jQuery, window.parseInt, window.parseFloat);
+})(jQuery, window.parseFloat);
