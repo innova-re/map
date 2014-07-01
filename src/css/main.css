@@ -1,4 +1,4 @@
-body { 
+body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -10,16 +10,37 @@ form.map-form {
     margin-top: 10px;
     position: absolute;
     z-index: 999;
+    padding: 7px;
+    background-color: #fff;
 }
 
-html { 
+html {
 	height: 100%;
-}
-
-.map-canvas { 
-	height: 100% 
 }
 
 img.poly-info {
 	width: 100%;
+}
+
+.alert {
+	z-index: 999;
+	margin-top: 200px;
+	margin-left: 980px;
+	position: absolute;
+}
+
+.info-marker {
+	font-size: 13pt;
+	font-weight: bold;
+	min-height: 60px;
+	min-width: 460px;
+}
+
+.info-window {
+	font-size: 13pt;
+	min-height: 120px;
+}
+
+.map-canvas {
+	height: 100%;
 }
