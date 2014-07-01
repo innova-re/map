@@ -7,7 +7,7 @@
  *
  * Date: Mon June 30
  */
-/* global jQuery, window */
+/* global window */
 (function ($, float) {
 	'use strict';
 
@@ -16,7 +16,6 @@
      * @constructor
      */
     var MapWidget = function ($mapForm) {
-
 		this.$selectedMap = $mapForm.find('.map-destination :selected');
 		this.latLng = this.getLatLng(this.$selectedMap.attr('map-latLng'));
 		this.latLngMarker = this.getLatLng(this.$selectedMap.attr('map-marker'));
@@ -25,7 +24,6 @@
 		this.map = this.getMap();
 		this.dataMarker = this.$selectedMap.attr('map-marker');
 		this.dataMarkerImage = this.$selectedMap.attr('map-marker-image');
-
     };
 
     MapWidget.prototype = {
@@ -33,14 +31,14 @@
     	constructor: MapWidget,
 
 		init: function () {
-			this.setMarker(this.latLng);
-		    this.setMarker(this.latLngMarker, this.dataMarkerImage);
-		    this.setLine();
-		    this.setDirectionsOnMap();
+			this.setMainMarker(this.latLng);
+			this.setMarker(this.latLngMarker, this.dataMarkerImage);
+			this.setLine();
+			this.setDirectionsOnMap();
 			this.$mapForm.show();
 			this.$mapForm.find('.map-setRoute').click($.proxy(this.setRoute, this));
 			google.maps.event.addListener(this.map, 'zoom_changed', $.proxy(this.toggleMarker, this));
-			this.setInfoWindow(this.$selectedMap.attr('map-help'));
+			this.map.panTo(this.latLngMarker);
 		},
 
 		getLatLng: function (latLng) {
@@ -49,8 +47,8 @@
 			return new google.maps.LatLng(float(latLng[0], 10), float(latLng[1], 10));
 		},
 
-    	getMap: function () {
-    		return new google.maps.Map($('.map-canvas')[0], {
+		getMap: function () {
+			return new google.maps.Map($('.map-canvas').get(0), {
 				zoom: this.zoom,
 				center: this.latLng,
 				mapTypeId: google.maps.MapTypeId.SATELLITE
@@ -115,15 +113,22 @@
 			});
 	    },
 
-		setMarker: function (latLng, dataMarkerImage) {
-    		this.marker = new google.maps.Marker({
-	            position: latLng,
-	            map: this.map,
-	            animation: google.maps.Animation.DROP,
-	            icon: dataMarkerImage,
-	            draggable:true
-	        });
-	        google.maps.event.addListener(this.marker, 'click', $.proxy(this.setInfoWindow, this, this.getPlan()));
+		getMarkerOptions: function (latLng, icon) {
+			return {
+				position: latLng,
+				map: this.map,
+				icon: icon
+			}
+	    },
+
+		setMarker: function (latLng, icon) {
+			this.marker = new google.maps.Marker(this.getMarkerOptions(latLng, icon));
+			google.maps.event.addListener(this.marker, 'click', $.proxy(this.setInfoWindow, this, this.getPlan()));
+    	},
+
+		setMainMarker: function (latLng) {
+			this.marker = new google.maps.Marker(this.getMarkerOptions(latLng));
+	        google.maps.event.addListener(this.marker, 'click', $.proxy(this.setZoom, this, this.marker));
     	},
 
 		setInfoWindow: function (content) {
@@ -139,6 +144,17 @@
 		setRoute: function() {
 			this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 			this.directionsService.route(this.getRequest(), $.proxy(this.setDirections, this));
+			this.marker.setMap(null);
+		},
+
+		setZoom: function (marker) {
+			var infoMarker = new google.maps.InfoWindow({
+				content: $('<div>').attr('class', 'info-marker').html(this.$selectedMap.attr('map-street-name'))[0]
+			});
+			this.map.panTo(this.latLngMarker);
+			this.map.setZoom(this.zoom);
+			this.map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+			infoMarker.open(this.map, marker);
 		},
 
 		toggleMarker: function () {
@@ -146,6 +162,7 @@
 				this.marker.setMap(null);
 				this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
 			} else {
+				// TODO the map is centered around this.marker!
 				this.marker.setMap(this.map);
 				this.map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 			}
@@ -167,4 +184,4 @@
 		});
 	});
 
-})(jQuery, window.parseFloat);
+})(window.jQuery, window.parseFloat);
