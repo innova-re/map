@@ -42,6 +42,18 @@
 			this.setInfoWindow(this.$selectedMap.attr('map-help'));
 		},
 
+		getCoordinates: function (coordinates) {
+			var LatLngCoords = [];
+			var coordinates = coordinates.split(',');
+
+			for(var i = 0; i < coordinates.length; i++) {
+				LatLngCoords.push(new google.maps.LatLng(coordinates[i], coordinates[i + 1]));
+				i = i + 1;
+			}
+
+			return LatLngCoords;
+		},
+
 		getLatLng: function (latLng) {
 			var latLng = latLng.split(',');
 
@@ -56,16 +68,12 @@
 			});
 		},
 
-		getCoordinates: function (coordinates) {
-			var LatLngCoords = [];
-			var coordinates = coordinates.split(',');
-
-			for(var i = 0; i < coordinates.length; i++) {
-				LatLngCoords.push(new google.maps.LatLng(coordinates[i], coordinates[i + 1]));
-				i = i + 1;
+		getMarkerOptions: function (latLng, icon) {
+			return {
+				position: latLng,
+				map: this.map,
+				icon: icon
 			}
-
-			return LatLngCoords;
 		},
 
 		getPlan: function () {
@@ -94,6 +102,16 @@
 			}
 		},
 
+		setInfoWindow: function (content) {
+			if (typeof(this.infoWindow) !== "undefined") {
+				this.infoWindow.close();
+			}
+			this.infoWindow = new google.maps.InfoWindow({
+				content: $('<div>').attr('class', 'info-window').html(content)[0]
+			});
+			this.infoWindow.open(this.map, this.marker);
+		},
+
 		setLine: function () {
 			var lineSymbol = {
 				path: google.maps.SymbolPath.CIRCLE,
@@ -114,14 +132,6 @@
 			});
 		},
 
-		getMarkerOptions: function (latLng, icon) {
-			return {
-				position: latLng,
-				map: this.map,
-				icon: icon
-			}
-		},
-
 		setMarker: function (latLng, icon) {
 			this.marker = new google.maps.Marker(this.getMarkerOptions(latLng, icon));
 			google.maps.event.addListener(this.marker, 'click', $.proxy(this.setInfoWindow, this, this.getPlan()));
@@ -130,16 +140,6 @@
 		setMainMarker: function (latLng) {
 			this.marker = new google.maps.Marker(this.getMarkerOptions(latLng));
 			google.maps.event.addListener(this.marker, 'click', $.proxy(this.setZoom, this, this.marker));
-		},
-
-		setInfoWindow: function (content) {
-			if (typeof(this.infoWindow) !== "undefined") {
-				this.infoWindow.close();
-			}
-			this.infoWindow = new google.maps.InfoWindow({
-				content: $('<div>').attr('class', 'info-window').html(content)[0]
-			});
-			this.infoWindow.open(this.map, this.marker);
 		},
 
 		setRoute: function() {
