@@ -166,6 +166,7 @@
 				// TODO the map is centered around this.marker!
 				this.marker.setMap(this.map);
 				this.map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+				this.setInfoWindow(this.$selectedMap.attr('map-help'));
 			}
 		}
 	};
