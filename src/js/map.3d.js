@@ -22,9 +22,10 @@
 		this.scene = this.getScene();
 		this.plane = this.getPlane();
 		this.cube = this.getCube();
+		this.setCubePosition(this.cube, 0);
 
 		// Animation variables
-		this.angularSpeed = 0.2;
+		this.angularSpeed = 0.1;
 		this.lastTime = 0;
 	};
 
@@ -35,10 +36,10 @@
 		init: function () {
 			this.setSize();
 			this.setCameraPosition();
-			this.setCubePosition();
 			$('body').append(this.renderer.domElement);
 			this.scene.add(this.cube);
 			this.scene.add(this.plane);
+			this.serLight();
 			this.animate();
 		},
 
@@ -60,19 +61,31 @@
 
 		getCube: function () {
 			return new THREE.Mesh(
-				new THREE.CubeGeometry(120, 120, 60)
+				new THREE.CubeGeometry(120, 120, 100, 0, 2, 3),
+				new THREE.MeshLambertMaterial({
+					wireframe: true,
+					wireframeLinewidth: 10
+				})
 			);
+		},
+
+		serLight: function () {
+			var light = new THREE.DirectionalLight('white');
+			light.position.set(0, -200, 280).normalize();
+			this.scene.add(light);
 		},
 
 		getPlane: function () {
 			return new THREE.Mesh(
-				new THREE.PlaneGeometry(300, 300, 40, 40),
+				new THREE.PlaneGeometry(300, 300, 20, 20),
 				new THREE.MeshBasicMaterial({ color: 0x7f7f7f, wireframe: true })
 			);
 		},
 
 		getRenderer: function () {
-			return new THREE.WebGLRenderer();
+			return new THREE.WebGLRenderer({
+				shadowMapEnabled: true
+			});
 		},
 
 		getScene: function () {
@@ -81,17 +94,17 @@
 
 		setCameraPosition: function () {
 			this.camera.position.y = -200;
-			this.camera.position.z = 300;
+			this.camera.position.z = 280;
 			this.camera.rotation.x = 30 * (PI / 180);
 		},
 
-		setCubePosition: function () {
-			this.cube.position.z = 10;
-			this.cube.rotation.z = 45 * (PI / 180);
+		setCubePosition: function (cube, zPosition) {
+			cube.position.z = zPosition;
 		},
 
 		setSize: function () {
 			this.renderer.setSize(this.innerWidth, this.innerHeight);
+			this.renderer.setClearColor(0xffffff, 1);
 		}
 	}
 
