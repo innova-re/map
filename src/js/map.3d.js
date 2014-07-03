@@ -8,6 +8,7 @@
  * - https://www.youtube.com/playlist?list=PLcUid3OP_4OVX8zp-ZTcyOsp6C9CJCqd0
  * - http://www.html5canvastutorials.com/labs/html5-canvas-interactive-building-map/
  * - http://mrdoob.com/projects/voxels/#A/
+ * - https://threejsdoc.appspot.com/doc/index.html#CubeGeometry
  */
 
 (function (window, $, THREE, PI, requestAnimationFrame) {
@@ -56,7 +57,7 @@
 		},
 
 		getCamera: function () {
-			return new THREE.PerspectiveCamera(45, this.innerWidth / this.innerHeight, 1, 1000 );
+			return new THREE.PerspectiveCamera(45, this.innerWidth / this.innerHeight, 0.1, 20000 );
 		},
 
 		getCube: function () {
@@ -84,7 +85,8 @@
 
 		getRenderer: function () {
 			return new THREE.WebGLRenderer({
-				shadowMapEnabled: true
+				shadowMapEnabled: true,
+				antialias:true
 			});
 		},
 
@@ -93,9 +95,8 @@
 		},
 
 		setCameraPosition: function () {
-			this.camera.position.y = -200;
-			this.camera.position.z = 280;
-			this.camera.rotation.x = 30 * (PI / 180);
+			this.camera.position.set(0,150,400);
+			this.camera.lookAt(this.scene.position);
 		},
 
 		setCubePosition: function (cube, zPosition) {
