@@ -4,11 +4,13 @@
  *
  * Copyright 2014, Antonio Pierro
  * Dual licensed under the MIT or GPL Version 2 licenses.
- * references: https://www.youtube.com/playlist?list=PLcUid3OP_4OVX8zp-ZTcyOsp6C9CJCqd0
- * http://www.html5canvastutorials.com/labs/html5-canvas-interactive-building-map/
+ * References:
+ * - https://www.youtube.com/playlist?list=PLcUid3OP_4OVX8zp-ZTcyOsp6C9CJCqd0
+ * - http://www.html5canvastutorials.com/labs/html5-canvas-interactive-building-map/
+ * - http://mrdoob.com/projects/voxels/#A/
  */
 
-(function (window, $, THREE) {
+(function (window, $, THREE, PI, requestAnimationFrame) {
 	'use strict';
 
 	var Building = function () {
@@ -20,6 +22,10 @@
 		this.scene = this.getScene();
 		this.plane = this.getPlane();
 		this.cube = this.getCube();
+
+		// Animation variables
+		this.angularSpeed = 0.2;
+		this.lastTime = 0;
 	};
 
 	Building.prototype = {
@@ -30,10 +36,22 @@
 			this.setSize();
 			this.setCameraPosition();
 			this.setCubePosition();
-			window.document.body.appendChild(this.renderer.domElement);
+			$('body').append(this.renderer.domElement);
 			this.scene.add(this.cube);
 			this.scene.add(this.plane);
+			this.animate();
+		},
+
+		animate: function () {
+			var time = (new Date()).getTime();
+			var timeDiff = time - this.lastTime;
+			var angularChange = this.angularSpeed * timeDiff * 2 * PI / 1000;
+
+			this.cube.rotation.z += angularChange;
+			this.lastTime = time;
 			this.renderer.render(this.scene, this.camera);
+
+			requestAnimationFrame($.proxy(this.animate, this));
 		},
 
 		getCamera: function () {
@@ -42,7 +60,7 @@
 
 		getCube: function () {
 			return new THREE.Mesh(
-				new THREE.CubeGeometry(120, 120, 120)
+				new THREE.CubeGeometry(120, 120, 60)
 			);
 		},
 
@@ -63,13 +81,13 @@
 
 		setCameraPosition: function () {
 			this.camera.position.y = -200;
-			this.camera.position.z = 400;
-			this.camera.rotation.x = .40;
+			this.camera.position.z = 300;
+			this.camera.rotation.x = 30 * (PI / 180);
 		},
 
 		setCubePosition: function () {
 			this.cube.position.z = 10;
-			this.cube.rotation.z = .75;
+			this.cube.rotation.z = 45 * (PI / 180);
 		},
 
 		setSize: function () {
@@ -83,4 +101,4 @@
 		building.init();
 	});
 
-})(window, window.jQuery, window.THREE);
+})(window, window.jQuery, window.THREE, window.Math.PI, window.requestAnimationFrame);
