@@ -29,6 +29,13 @@ img.poly-info {
 	position: absolute;
 }
 
+.info-icon {
+	font-size: 13pt;
+	font-weight: bold;
+	min-height: 30px;
+	min-width: 290px;
+}
+
 .info-marker {
 	font-size: 13pt;
 	font-weight: bold;
