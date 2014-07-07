@@ -10,24 +10,21 @@
  * - http://mrdoob.com/projects/voxels/#A/
  * - https://threejsdoc.appspot.com/doc/index.html#CubeGeometry
  */
-
 (function (window, $, THREE, PI, requestAnimationFrame) {
 	'use strict';
 
 	var Building = function () {
-
 		this.innerWidth = window.innerWidth;
 		this.innerHeight = window.innerHeight;
+		this.planeWidth = 100;
+		this.planeHeight = 100;
 		this.renderer = this.getRenderer();
 		this.camera = this.getCamera();
 		this.scene = this.getScene();
 		this.plane = this.getPlane();
-		this.cube = this.getCube();
-		this.setCubePosition(this.cube, 0);
-
-		// Animation variables
-		this.angularSpeed = 0.1;
-		this.lastTime = 0;
+		this.cubeVertex = this.planeHeight * 0.6;
+		this.cube = this.getCube(this.cubeVertex);
+		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 	};
 
 	Building.prototype = {
@@ -36,57 +33,48 @@
 
 		init: function () {
 			this.setSize();
-			this.setCameraPosition();
 			$('body').append(this.renderer.domElement);
-			this.scene.add(this.cube);
-			this.scene.add(this.plane);
-			this.serLight();
+			this.addObjects();
+			this.setPosiotions();
 			this.animate();
 		},
 
+		addObjects: function () {
+			this.scene.add(this.plane);
+			this.scene.add(this.cube);
+		},
+
 		animate: function () {
-			var time = (new Date()).getTime();
-			var timeDiff = time - this.lastTime;
-			var angularChange = this.angularSpeed * timeDiff * 2 * PI / 1000;
-
-			this.cube.rotation.z += angularChange;
-			this.lastTime = time;
 			this.renderer.render(this.scene, this.camera);
-
 			requestAnimationFrame($.proxy(this.animate, this));
 		},
 
 		getCamera: function () {
-			return new THREE.PerspectiveCamera(45, this.innerWidth / this.innerHeight, 0.1, 20000 );
+			return new THREE.PerspectiveCamera(60, this.innerWidth / this.innerHeight, 0.1, 20000 );
 		},
 
-		getCube: function () {
+		getCube: function (vertex) {
 			return new THREE.Mesh(
-				new THREE.CubeGeometry(120, 120, 100, 0, 2, 3),
-				new THREE.MeshLambertMaterial({
-					wireframe: true,
-					wireframeLinewidth: 10
-				})
+				new THREE.BoxGeometry(vertex, vertex, vertex),
+				new THREE.MeshNormalMaterial({ color: 0x7f7f7f, wireframe: true })
 			);
-		},
-
-		serLight: function () {
-			var light = new THREE.DirectionalLight('white');
-			light.position.set(0, -200, 280).normalize();
-			this.scene.add(light);
 		},
 
 		getPlane: function () {
 			return new THREE.Mesh(
-				new THREE.PlaneGeometry(300, 300, 20, 20),
+				new THREE.PlaneGeometry(this.planeWidth, this.planeHeight, 10, 10),
 				new THREE.MeshBasicMaterial({ color: 0x7f7f7f, wireframe: true })
 			);
+		},
+
+		getRadians: function (degrees) {
+			return degrees * PI / 180;
 		},
 
 		getRenderer: function () {
 			return new THREE.WebGLRenderer({
 				shadowMapEnabled: true,
-				antialias:true
+				antialias: true
 			});
 		},
 
@@ -94,20 +82,17 @@
 			return new THREE.Scene();
 		},
 
-		setCameraPosition: function () {
-			this.camera.position.set(0,150,400);
-			this.camera.lookAt(this.scene.position);
-		},
-
-		setCubePosition: function (cube, zPosition) {
-			cube.position.z = zPosition;
+		setPosiotions: function () {
+			this.camera.position.set(0, 0, this.planeHeight * 1.5);
+			this.plane.rotation.set(this.getRadians(90), 0, 0);
+			this.cube.position.y = this.cubeVertex / 2;
 		},
 
 		setSize: function () {
 			this.renderer.setSize(this.innerWidth, this.innerHeight);
 			this.renderer.setClearColor(0xffffff, 1);
 		}
-	}
+	};
 
 	$(function () {
 		var building = new Building();
@@ -115,4 +100,4 @@
 		building.init();
 	});
 
-})(window, window.jQuery, window.THREE, window.Math.PI, window.requestAnimationFrame);
+})(this, this.jQuery, this.THREE, this.Math.PI, this.requestAnimationFrame);
