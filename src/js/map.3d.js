@@ -23,6 +23,8 @@
 		this.plane = this.getPlane();
 		this.cubeVertex = this.planeVertex * 0.5;
 		this.cube = this.getCube(this.cubeVertex);
+		this.cube2 = this.getCube(this.cubeVertex);
+		this.cube3 = this.getCube(this.cubeVertex);
 		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 	};
 
@@ -37,11 +39,14 @@
 			this.setAxisHelper();
 			this.setPosiotions();
 			this.animate();
+			window.t = this;
 		},
 
 		addObjects: function () {
 			this.scene.add(this.plane);
 			this.scene.add(this.cube);
+			this.scene.add(this.cube2);
+			this.scene.add(this.cube3);
 		},
 
 		animate: function () {
@@ -55,9 +60,9 @@
 
 		getCube: function (vertex) {
 			return new THREE.Mesh(
-				new THREE.BoxGeometry(vertex, vertex, vertex),
+				new THREE.BoxGeometry(vertex, vertex * 0.3, vertex),
 				new THREE.LineBasicMaterial({
-					color: 0x0000ff,
+					color: '#' + Math.floor(Math.random()*16777215).toString(16),
 					opacity: 0.5,
 					transparent:true })
 			);
@@ -85,6 +90,10 @@
 			return new THREE.Scene();
 		},
 
+		/*
+		 * An axis object to visualize the the 3 axes in a simple way.
+		 * The X axis is red. The Y axis is green. The Z axis is blue.
+		*/
 		setAxisHelper: function () {
 			this.scene.add(new THREE.AxisHelper(this.planeVertex));
 		},
@@ -92,7 +101,12 @@
 		setPosiotions: function () {
 			this.camera.position.set(0, 0, this.planeVertex * 1.5);
 			this.plane.rotation.set(this.getRadians(90), 0, 0);
-			this.cube.position.y = this.cubeVertex / 2;
+			var y1 = this.cube.geometry.vertices[0].y;
+			var y2 = this.cube2.geometry.vertices[0].y;
+			var y3 = this.cube3.geometry.vertices[0].y;
+			this.cube.position.y = y1;
+			this.cube2.position.y = y1 * 2 + y2;
+			this.cube3.position.y = y1 * 2 + y2 * 2 + y3;
 		},
 
 		setSize: function () {
