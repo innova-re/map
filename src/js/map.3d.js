@@ -16,13 +16,12 @@
 	var Building = function () {
 		this.innerWidth = window.innerWidth;
 		this.innerHeight = window.innerHeight;
-		this.planeWidth = 100;
-		this.planeHeight = 100;
+		this.planeVertex = 100;
 		this.renderer = this.getRenderer();
 		this.camera = this.getCamera();
 		this.scene = this.getScene();
 		this.plane = this.getPlane();
-		this.cubeVertex = this.planeHeight * 0.5;
+		this.cubeVertex = this.planeVertex * 0.5;
 		this.cube = this.getCube(this.cubeVertex);
 		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 	};
@@ -35,6 +34,7 @@
 			this.setSize();
 			$('body').append(this.renderer.domElement);
 			this.addObjects();
+			this.setAxisHelper();
 			this.setPosiotions();
 			this.animate();
 		},
@@ -65,7 +65,7 @@
 
 		getPlane: function () {
 			return new THREE.Mesh(
-				new THREE.PlaneGeometry(this.planeWidth, this.planeHeight, 10, 10),
+				new THREE.PlaneGeometry(this.planeVertex, this.planeVertex, 10, 10),
 				new THREE.MeshBasicMaterial({ color: 0x7f7f7f, wireframe: true })
 			);
 		},
@@ -85,8 +85,12 @@
 			return new THREE.Scene();
 		},
 
+		setAxisHelper: function () {
+			this.scene.add(new THREE.AxisHelper(this.planeVertex));
+		},
+
 		setPosiotions: function () {
-			this.camera.position.set(0, 0, this.planeHeight * 1.5);
+			this.camera.position.set(0, 0, this.planeVertex * 1.5);
 			this.plane.rotation.set(this.getRadians(90), 0, 0);
 			this.cube.position.y = this.cubeVertex / 2;
 		},
