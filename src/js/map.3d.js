@@ -22,7 +22,7 @@
 		this.camera = this.getCamera();
 		this.scene = this.getScene();
 		this.plane = this.getPlane();
-		this.cubeVertex = this.planeHeight * 0.6;
+		this.cubeVertex = this.planeHeight * 0.5;
 		this.cube = this.getCube(this.cubeVertex);
 		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 	};
@@ -56,7 +56,10 @@
 		getCube: function (vertex) {
 			return new THREE.Mesh(
 				new THREE.BoxGeometry(vertex, vertex, vertex),
-				new THREE.MeshNormalMaterial({ color: 0x7f7f7f, wireframe: true })
+				new THREE.LineBasicMaterial({
+					color: 0x0000ff,
+					opacity: 0.5,
+					transparent:true })
 			);
 		},
 
