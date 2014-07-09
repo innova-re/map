@@ -17,6 +17,7 @@
 		this.innerWidth = window.innerWidth;
 		this.innerHeight = window.innerHeight;
 		this.planeVertex = 100;
+		this.floorHeight = 17;
 		this.renderer = this.getRenderer();
 		this.camera = this.getCamera();
 		this.scene = this.getScene();
@@ -47,6 +48,7 @@
 			this.scene.add(this.cube);
 			this.scene.add(this.cube2);
 			this.scene.add(this.cube3);
+			this.addStairs(this.cubeVertex);
 		},
 
 		animate: function () {
@@ -60,7 +62,7 @@
 
 		getCube: function (vertex) {
 			return new THREE.Mesh(
-				new THREE.BoxGeometry(vertex, vertex * 0.3, vertex),
+				new THREE.BoxGeometry(vertex, this.floorHeight, vertex),
 				new THREE.LineBasicMaterial({
 					color: '#' + Math.floor(Math.random()*16777215).toString(16),
 					opacity: 0.5,
@@ -90,6 +92,50 @@
 			return new THREE.Scene();
 		},
 
+		addStairs: function (xPosition, yPosition) {
+			// MATERIALS
+			var stepMaterialVertical = new THREE.MeshLambertMaterial({color: 0xC0C0C0});
+			var stepMaterialHorizontal = new THREE.MeshLambertMaterial({color: 0xC0C0C0});
+
+			var stepWidth = 5;
+			var stepSize = 2;
+			var stepThickness = 0.5;
+			// height from top of one step to bottom of next step up
+			var verticalStepHeight = stepSize;
+			var horizontalStepDepth = stepSize*2;
+
+			var stepHalfThickness = stepThickness/2;
+
+			// +Y direction is up
+			// Define the two pieces of the step, vertical and horizontal
+			// THREE.CubeGeometry takes (width, height, depth)
+			var stepVertical = new THREE.BoxGeometry(stepWidth, verticalStepHeight, stepThickness);
+			var stepHorizontal = new THREE.BoxGeometry(stepWidth, stepThickness, horizontalStepDepth);
+			var stepMesh;
+
+			for(var s = 0; s < 7; ++s){
+				var y = (verticalStepHeight + stepThickness) * s + verticalStepHeight/2;
+				var z = (horizontalStepDepth - stepThickness) * s;
+				// Make and position the vertical part of the step
+				stepMesh = new THREE.Mesh( stepVertical, stepMaterialVertical );
+				// The position is where the center of the block will be put.
+				// You can define position as THREE.Vector3(x, y, z) or in the following way:
+				stepMesh.position.x = xPosition || 0;            // centered at origin
+				stepMesh.position.y = yPosition || y;    // half of height: put it above ground plane
+				stepMesh.position.z = z;            // centered at origin
+				this.scene.add( stepMesh );
+
+				// Make and position the horizontal part
+				stepMesh = new THREE.Mesh( stepHorizontal, stepMaterialHorizontal );
+				stepMesh.position.x = xPosition || 0;
+				// Push up by half of horizontal step's height, plus vertical step's height
+				stepMesh.position.y = yPosition || y + (stepThickness/2 + verticalStepHeight/2);
+				// Push step forward by half the depth, minus half the vertical step's thickness
+				stepMesh.position.z = z + (horizontalStepDepth/2 - stepThickness/2);
+				this.scene.add( stepMesh );
+			}
+		},
+
 		/*
 		 * An axis object to visualize the the 3 axes in a simple way.
 		 * The X axis is red. The Y axis is green. The Z axis is blue.
@@ -101,12 +147,9 @@
 		setPosiotions: function () {
 			this.camera.position.set(0, 0, this.planeVertex * 1.5);
 			this.plane.rotation.set(this.getRadians(90), 0, 0);
-			var y1 = this.cube.geometry.vertices[0].y;
-			var y2 = this.cube2.geometry.vertices[0].y;
-			var y3 = this.cube3.geometry.vertices[0].y;
-			this.cube.position.y = y1;
-			this.cube2.position.y = y1 * 2 + y2;
-			this.cube3.position.y = y1 * 2 + y2 * 2 + y3;
+			this.cube.position.y = this.floorHeight * 0.5;
+			this.cube2.position.y = this.floorHeight * 1.5;
+			this.cube3.position.y = this.floorHeight * 2.5;
 		},
 
 		setSize: function () {
