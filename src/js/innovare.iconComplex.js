@@ -52,8 +52,10 @@
 		},
 
 		setInfoWindow: function (marker, title) {
+			var content = $('<div>').attr('class', 'info-icon');
+			content.append($('<a>').attr('href', './?' + title).html(title));
 			this.infoWindow = new google.maps.InfoWindow({
-				content: $('<div>').attr('class', 'info-icon').html(title)[0]
+				content: content[0]
 			});
 			this.infoWindow.open(this.map, marker);
 		},
@@ -71,11 +73,11 @@
 					position: myLatLng,
 					animation: google.maps.Animation.DROP,
 					map: map,
-					icon: 'src/images/univ.small.png',
+					// icon: 'src/images/univ.small.png',
 					title: location[3],
 					zIndex: location[2]
 				});
-				google.maps.event.addListener(marker, 'mouseover', $.proxy(this.setInfoWindow, this, marker, location[3]));
+				google.maps.event.addListener(marker, 'click', $.proxy(this.setInfoWindow, this, marker, location[3]));
 			}
 		}
 	};
