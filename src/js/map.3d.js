@@ -18,11 +18,11 @@
 		this.innerHeight = window.innerHeight;
 		this.planeVertex = 100;
 		this.floorHeight = 17;
+		this.cubeVertex = this.planeVertex * 0.5;
 		this.renderer = this.getRenderer();
 		this.camera = this.getCamera();
 		this.scene = this.getScene();
 		this.plane = this.getPlane();
-		this.cubeVertex = this.planeVertex * 0.5;
 		this.cube = this.getCube(this.cubeVertex);
 		this.cube2 = this.getCube(this.cubeVertex);
 		this.cube3 = this.getCube(this.cubeVertex);
@@ -66,12 +66,6 @@
 				z: -this.cubeVertex / 2,
 				y:0,
 				height: this.floorHeight - 2
-			});
-			new THREE.Stair(this.scene, {
-				x: -this.cubeVertex / 2,
-				z: -this.cubeVertex / 2,
-				y: this.floorHeight,
-				height: this.floorHeight * 2
 			});
 			new THREE.Stair(this.scene, {
 				x: this.cubeVertex / 2,
