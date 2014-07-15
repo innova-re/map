@@ -20,6 +20,7 @@
 		this.icons = icons;
 		this.map = new google.maps.Map($('.map-canvas').get(0), this.getMapOptions());
 		this.init();
+		this.action = $('input[name="map-detail"]').val();
 	};
 
 	IconComplex.prototype = {
@@ -63,7 +64,7 @@
 
 		setInfoWindow: function (marker, location) {
 			var content = $('<div>').attr('class', 'info-icon');
-			content.append($('<a>').attr('href', './?labName=' + location[4]).html(location[3]));
+			content.append($('<a>').attr('href', './' + this.action + '?labName=' + location[4]).html(location[3]));
 			this.infoWindow = new google.maps.InfoWindow({
 				content: content[0]
 			});

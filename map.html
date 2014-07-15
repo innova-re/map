@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./src/css/main.css">
+    </head>
+
+    <body>
+
+        <form class="form-inline map-form" role="form">
+            <div class="form-group">
+                <label class="control-label" for="start">Partenza</label>
+                <input type="text" class="form-control map-departure" value="via Ospedale, 121 Cagliari" size="50">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Arrivo</label>
+                <select class="form-control map-destination">
+                    <option
+                        value="lab-software"
+                        map-street-name="Via Is Maglias, 433, Universit&agrave; degli Studi di Cagliari - Facolt&agrave; di Ingegneria e Architettura"
+                        map-help="<h3>Laboratorio Software</h3>Clicca sul berretto universitario per accedere alla planimetria dell'edificio."
+                        map-latLng="39.229686, 9.107726"
+                        map-marker="39.230084, 9.107868"
+                        map-marker-image="src/images/univ.png"
+                        map-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
+                        map-plan="src/images/ING-laboratorio-software.jpg">
+                        Ingegneria - Laboratorio Software
+                    </option>
+                    <option
+                        value="lab-multifunzionale"
+                        map-street-name="Via Is Maglias, 433, Università degli Studi di Cagliari - Facoltà di Ingegneria e Architettura"
+                        map-help="<h3>Laboratorio Multifunzionale</h3>Clicca sul berretto universitario per accedere alla planimetria dell'edificio."
+                        map-latLng="39.229686, 9.107726"
+                        map-marker="39.230084, 9.107868"
+                        map-marker-image="src/images/univ.png"
+                        map-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
+                        map-plan="src/images/ING-laboratorio-multifunzionale.jpg">
+                        Ingegneria - Laboratorio Multifunzionale
+                    </option>
+                    <option
+                        value="lab-grafica"
+                        map-street-name="Via Santa Croce, 67"
+                        map-help="<h3>Lab. Grafica</h3>Clicca sul berretto universitario per accedere alla planimetria dell'edificio."
+                        map-latLng="39.219293, 9.114814"
+                        map-marker="39.219297, 9.115063"
+                        map-marker-image="src/images/univ.png"
+                        map-walking-path="39.219293, 9.114814, 39.219297, 9.115063"
+                        map-plan="src/images/ARC-laboratorio-grafica.jpg">Laboratori Polo Ingegneria Architettura - Lab. Grafica
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <select class="form-control map-mode">
+                    <option value="DRIVING">Seleziona il mezzo di trasporto</option>
+                    <option value="WALKING">A piedi</option>
+                    <option value="TRANSIT">Mezzi pubblici</option>
+                    <option value="DRIVING">In macchina</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-default map-setRoute">Invio</button>
+
+        </form>
+
+        <div class="map-canvas"></div>
+
+        <!-- TODO use requirejs to load js module -->
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="./src/js/innovare.map.js"></script>
+
+        <script>
+            $(function() {
+                'use strict';
+
+                // TODO very fast but too weak!
+                var labName = $(location).attr('href').split('=')[1];
+
+                $('select.map-destination option[value="'+ labName +'"]')
+                    .prop('selected', true)
+                    .trigger('change');
+            })
+        </script>
+    </body>
+</html>
