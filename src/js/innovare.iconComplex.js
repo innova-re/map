@@ -30,14 +30,24 @@
 			this.setMarkers(this.map, this.getIcons());
 		},
 
+		/*
+		 * getIcons function
+		 *
+		 * it returns an array of values,
+		 * each array matches a laboratory and contains the following values
+		 * [latitude, longitude, z-index, the selected text, the selected value]
+		 *
+		 * @return (array)
+		*/
 		getIcons: function() {
 			var icons = [];
 			$.each(this.icons, function (i, value) {
 				var $value = $(value);
-				var array = $.map($value.val().split(','), function (value) {
+				var array = $.map($value.attr('map-latLng').split(','), function (value) {
 					return float(value, 10);
 				});
 				array.push($value.text());
+				array.push($value.val());
 				icons.push(array);
 			});
 			return icons;
@@ -45,15 +55,17 @@
 
 		getMapOptions: function () {
 			return {
-				zoom: 14,
+				zoom: 13,
 				center: new google.maps.LatLng(39.246660, 9.118609),
 				mapTypeId: google.maps.MapTypeId.ROAD
 			}
 		},
 
-		setInfoWindow: function (marker, title) {
+		setInfoWindow: function (marker, location) {
+			var content = $('<div>').attr('class', 'info-icon');
+			content.append($('<a>').attr('href', './?labName=' + location[4]).html(location[3]));
 			this.infoWindow = new google.maps.InfoWindow({
-				content: $('<div>').attr('class', 'info-icon').html(title)[0]
+				content: content[0]
 			});
 			this.infoWindow.open(this.map, marker);
 		},
@@ -71,11 +83,11 @@
 					position: myLatLng,
 					animation: google.maps.Animation.DROP,
 					map: map,
-					icon: 'src/images/univ.small.png',
+					// icon: 'src/images/univ.small.png',
 					title: location[3],
 					zIndex: location[2]
 				});
-				google.maps.event.addListener(marker, 'mouseover', $.proxy(this.setInfoWindow, this, marker, location[3]));
+				google.maps.event.addListener(marker, 'click', $.proxy(this.setInfoWindow, this, marker, location));
 			}
 		}
 	};
