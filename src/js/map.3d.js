@@ -43,9 +43,8 @@
 			this.setAxisHelper();
 			this.setPosiotions();
 			this.animate();
-			window.t = this;
-			window.building = this;
 			this.renderer.domElement.addEventListener( 'click', function() {console.log(this)}, false );
+			this.setPath();
 		},
 
 		addObjects: function () {
@@ -87,7 +86,7 @@
 		getCube: function (vertex, material) {
 			var material = material || {
 				color: '#' + Math.floor(Math.random()*16777215).toString(16),
-				opacity: 0.5,
+				opacity: 0.3,
 				transparent: true
 			};
 			return new THREE.Mesh(
@@ -140,6 +139,30 @@
 		setSize: function () {
 			this.renderer.setSize(this.innerWidth, this.innerHeight);
 			this.renderer.setClearColor(0xffffff, 1);
+		},
+
+		setPath: function () {
+			var shift = -2;
+			var material = new THREE.LineDashedMaterial({
+				color: 0xcc0000, dashSize: 2, gapSize: 2, linewidth: 9
+			});
+			var geometry = new THREE.Geometry();
+			var x0 = this.cubeVertex / 2 + shift,
+				z0 = -this.cubeVertex / 2 + shift,
+				y0 = 0;
+			var z1 = 0 - 8 + shift,
+				y1 = this.floorHeight;
+
+			geometry.vertices.push(new THREE.Vector3(0, y0, z0 * 2));
+			geometry.vertices.push(new THREE.Vector3(0, y0, z0));
+			geometry.vertices.push(new THREE.Vector3(x0, y0, z0));
+			geometry.vertices.push(new THREE.Vector3(x0, y1, z1));
+			geometry.vertices.push(new THREE.Vector3(x0, y1, z0));
+			geometry.vertices.push(new THREE.Vector3(x0, y1 * 2, z1));
+			geometry.vertices.push(new THREE.Vector3(x0, y1 * 2, -z1));
+
+			geometry.computeLineDistances();
+			this.scene.add(new THREE.Line( geometry, material));
 		}
 	};
 
