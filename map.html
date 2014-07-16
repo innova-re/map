@@ -23,7 +23,7 @@
                         map-latLng="39.229686, 9.107726"
                         map-marker="39.230084, 9.107868"
                         map-marker-image="src/images/univ.png"
-                        map-walking-path="39.229689, 9.107713, 39.22981, 9.10814, 39.230175, 9.108046, 39.230185, 9.107969"
+                        map-walking-path="39.229689, 9.107713, 39.229783, 9.107777, 39.229973, 9.107465, 39.229917, 9.107719, 39.230076, 9.107676"
                         map-plan="src/images/ING-laboratorio-software.jpg">
                         Ingegneria - Laboratorio Software
                     </option>
@@ -76,7 +76,7 @@
                 'use strict';
 
                 // TODO very fast but too weak!
-                var labName = $(location).attr('href').split('=')[1];
+                var labName = $(location).attr('href').split('=')[1] || 'lab-software';
 
                 $('select.map-destination option[value="'+ labName +'"]')
                     .prop('selected', true)

@@ -116,7 +116,7 @@
 			var lineSymbol = {
 				path: google.maps.SymbolPath.CIRCLE,
 				strokeOpacity: 1,
-				scale: 4
+				scale: 3
 			};
 
 			new google.maps.Polyline({
@@ -180,7 +180,6 @@
 	$(function() {
 		var $mapForm = $('.map-form');
 
-		initialize($mapForm);
 		$mapForm.find('.map-destination').change(function () {
 			initialize($mapForm);
 		});
