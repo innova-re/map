@@ -26,7 +26,7 @@
         this.$mapForm = $mapForm;
         this.map = this.getMap();
         this.dataMarker = this.$selectedMap.attr('map-marker');
-        this.dataMarkerImage = 'src/images/university_black.png';
+        this.dataMarkerImage = 'src/images/laboratory.png';
     };
 
     initialize = function ($formMap) {
@@ -40,7 +40,7 @@
         constructor: MapWidget,
 
         init: function () {
-            this.setStartMarker(this.latLng, 'src/images/letter_a.png');
+            this.setStartMarker(this.latLng, 'src/images/university_black.png');
             this.setMarker(this.latLngMarker, this.dataMarkerImage);
             this.setLine();
             this.setDirectionsOnMap();
@@ -87,9 +87,13 @@
         },
 
         getPlan: function () {
-            return $('<img>')
-                .attr('class', 'poly-info')
-                .attr('src', this.$selectedMap.attr('map-plan'))[0];
+
+            var image = this.$selectedMap.attr('map-plan');
+
+            return $('<div>')
+                .append($('<img>').attr({'class': 'poly-info', src: image}))
+                .append($('<span>')
+                    .append($('<a>').attr({href: image, target: 'map'}).html('zoom')));
         },
 
         getRequest: function () {
@@ -111,7 +115,7 @@
         setDirections: function (response, status) {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.directionsRenderer.setDirections(response);
-                this.addMarker(response.routes[0].legs[0].start_location, 'src/images/letter_p.png');
+                this.addMarker(response.routes[0].legs[0].start_location, null);
             }
         },
 
